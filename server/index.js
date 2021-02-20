@@ -87,7 +87,7 @@ loadFiles(originalFilePath, function (path) {
   translateFiles.push(path)
 }).then(() => {
   const promiseArr = translateFiles.map(file => {
-    return start(file, ['ar'])
+    return start(file, ['ar','es','pt'])
   })
   Promise.all(promiseArr).then(() => {
     console.log('loadFiles 翻译完成')
