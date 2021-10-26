@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk')
 const { AWSTranslateJSON } = require('aws-translate-json')
+const minimist = require('minimist')
 const fs = require('fs')
 const path = require('path')
 const readdir = promisify(fs.readdir)
@@ -80,14 +81,17 @@ function start (targetPath, lang) {
   })
 }
 
-// start('./public/translate/login.json', ['ar', 'es', 'pt'])
-// start('./common.json', 'ar');
-// start('./ui.json', 'ar');
 loadFiles(originalFilePath, function (path) {
   translateFiles.push(path)
 }).then(() => {
+  const argv = minimist(process.argv.slice(2))
+  const lang = argv.l
+  if (!lang) {
+    console.log('缺少‘l’参数')
+    return
+  }
   const promiseArr = translateFiles.map(file => {
-    return start(file, ['ar','es','pt'])
+    return start(file, lang.split(','))
   })
   Promise.all(promiseArr).then(() => {
     console.log('loadFiles 翻译完成')
